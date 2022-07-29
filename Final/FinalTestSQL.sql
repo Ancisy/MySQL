@@ -62,6 +62,14 @@ WHERE jobTitle ='Sales Rep' AND city = 'San Francisco';
 	ORDER BY orNumber DESC
 	LIMIT 5) As sub_table ON c.customerNUmber = sub_table.customerNumber;
     
+    
+    SELECT COUNT(o.orderNumber) AS orNumber
+	FROM customers c 
+	INNER JOIN orders o ON c.customerNumber = o.customerNumber
+    GROUP BY c.customerNumber
+    ORDER BY orNumber DESC
+    LIMIT 5;
+    
 
 -- Tạo store procedure lấy ra thông tin id đơn hàng, id khách hàng, tên khách hàng, 
 -- orderDate, requireDate, shippedDate, sản phẩm (id, tên, số lượng), comment, với tham số truyền vào là status
