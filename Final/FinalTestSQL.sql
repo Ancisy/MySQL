@@ -7,6 +7,7 @@ INNER JOIN employees e ON o.officeCode = e.officeCode
 GROUP BY city;
 
 -- Liệt kê nước nào có số lượng văn phòng nhiều nhất
+-- 1
 CREATE OR REPLACE VIEW emNumView AS 
 SELECT country, COUNT(officeCode) AS Office_Number
 FROM offices o 
@@ -17,6 +18,21 @@ FROM emNumView
 WHERE Office_Number = (
 	SELECT MAX(Office_Number)
 	FROM emNumView);
+    
+-- 2
+SELECT country, Office_Number
+FROM(
+SELECT country, COUNT(officeCode) AS Office_Number
+FROM offices o 
+GROUP BY country) AS sub_table1
+WHERE sub_table1.Office_Number = (
+SELECT MAX(Office_Number)
+From (
+	SELECT country, COUNT(officeCode) AS Office_Number
+	FROM offices o 
+	GROUP BY country
+    ) AS sub_table
+    );
 
 -- Liệt kê tình trạng các đơn hàng và số lượng đơn hàng thuộc tình trạng đó
 SELECT status, COUNT(quantityOrdered)
@@ -52,6 +68,14 @@ INNER JOIN offices o ON o.officeCode = e.officeCode
 WHERE jobTitle ='Sales Rep' AND city = 'San Francisco';
 
 -- Liệt kê thông tin 5 khách hàng order nhiều nhất
+-- 1 
+	SELECT c.*, COUNT(o.orderNumber) AS orNumber
+	FROM customers c 
+	INNER JOIN orders o ON c.customerNumber = o.customerNumber
+    GROUP BY c.customerNumber
+    ORDER BY orNumber DESC
+    LIMIT 5;
+-- 2
     SELECT c.*
     FROM customers c
     INNER JOIN (
@@ -62,15 +86,6 @@ WHERE jobTitle ='Sales Rep' AND city = 'San Francisco';
 	ORDER BY orNumber DESC
 	LIMIT 5) As sub_table ON c.customerNUmber = sub_table.customerNumber;
     
-    
-    SELECT COUNT(o.orderNumber) AS orNumber
-	FROM customers c 
-	INNER JOIN orders o ON c.customerNumber = o.customerNumber
-    GROUP BY c.customerNumber
-    ORDER BY orNumber DESC
-    LIMIT 5;
-    
-
 -- Tạo store procedure lấy ra thông tin id đơn hàng, id khách hàng, tên khách hàng, 
 -- orderDate, requireDate, shippedDate, sản phẩm (id, tên, số lượng), comment, với tham số truyền vào là status
 DELIMITER $$
