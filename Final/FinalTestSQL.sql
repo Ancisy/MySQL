@@ -52,7 +52,7 @@ INNER JOIN offices o ON o.officeCode = e.officeCode
 WHERE jobTitle ='Sales Rep' AND city = 'San Francisco';
 
 -- Liệt kê thông tin 5 khách hàng order nhiều nhất
-	SELECT * 
+    SELECT * 
     FROM customers c
     INNER JOIN (
 	SELECT c.customerNumber, COUNT(o.orderNumber) AS orNumber
