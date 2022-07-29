@@ -52,12 +52,16 @@ INNER JOIN offices o ON o.officeCode = e.officeCode
 WHERE jobTitle ='Sales Rep' AND city = 'San Francisco';
 
 -- Liệt kê thông tin 5 khách hàng order nhiều nhất
-SELECT c.customerNumber, c.customerName, c.phone,c.country,COUNT(orderNumber) as OrderNumber
-FROM customers c 
-INNER JOIN orders o ON c.customerNumber = o.customerNumber
-GROUP BY c.customerNumber,c.customerName,c.phone,c.country
-ORDER BY OrderNumber DESC
-LIMIT 5;
+	SELECT * 
+    FROM customers c
+    INNER JOIN (
+	SELECT c.customerNumber, COUNT(o.orderNumber) AS orNumber
+	FROM customers c 
+	INNER JOIN orders o ON c.customerNumber = o.customerNumber
+	GROUP BY c.customerNumber
+	ORDER BY orNumber DESC
+	LIMIT 5) As sub_table ON c.customerNUmber = sub_table.customerNumber;
+    
 
 -- Tạo store procedure lấy ra thông tin id đơn hàng, id khách hàng, tên khách hàng, 
 -- orderDate, requireDate, shippedDate, sản phẩm (id, tên, số lượng), comment, với tham số truyền vào là status
